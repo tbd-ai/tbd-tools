@@ -1,4 +1,4 @@
-commit 5920f60046c8ea51d44ad570bf92e4df1e46bf3a
+commit adf0d997d821a82bfbe36f40c68c519d56a4cb52
 Author: Abhishek Tiwari <abtiwari94@gmail.com>
 Date:   Tue Mar 20 15:46:02 2018 -0400
 
@@ -1864,18 +1864,9 @@ index fc35c49..a93a8f3 100644
  namespace mxnet {
  #if DMLC_CXX11_THREAD_LOCAL
 diff --git a/src/imperative/imperative_utils.h b/src/imperative/imperative_utils.h
-index 85e01b1..ec1b623 100644
+index 85e01b1..49a5cc1 100644
 --- a/src/imperative/imperative_utils.h
 +++ b/src/imperative/imperative_utils.h
-@@ -70,7 +70,7 @@ inline Context GetContext(const nnvm::NodeAttrs& attrs,
-     ctx = Context::CPU();
-   }
- #if !MXNET_USE_CUDA
--  if (ctx.dev_mask() == gpu::kDevMask) {
-+``  if (ctx.dev_mask() == gpu::kDevMask) {
-     LOG(INFO) << "GPU support is disabled. Compile MXNet with "
-               << "USE_CUDA=1 to enable GPU support.";
-   }
 @@ -79,7 +79,12 @@ inline Context GetContext(const nnvm::NodeAttrs& attrs,
  }
  
