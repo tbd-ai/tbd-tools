@@ -81,7 +81,7 @@ Install mxnet:
 ```
 bash install-mxnet-ubuntu-python.sh
 ```
-Now, run sockeye / mxnet models and lets say the stderr log file generated from these runs are in folder 'logs'.
+Now, run sockeye / mxnet models and lets say the stderr log file generated from these runs are in folder 'logs'. Generate memory profile graphs:
 ```
 python3 memory_analysis.py /path/to/logs
 python3 plot_memory_analysis.py memory_analysis
