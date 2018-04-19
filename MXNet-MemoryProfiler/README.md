@@ -42,13 +42,14 @@ cd MXNet-MemoryProfiler
 ./patch_profiler.sh
 bash setup-utils/install-mxnet-ubuntu-python.sh
 ```
-Now, run sockeye / mxnet models and lets say the stderr log file generated from these runs are in folder 'logs', run memory analysis:
-NOTE: logs folder should only contain the stderr output of sockeye/mxnet run
+Now, run sockeye / mxnet models and lets say the stderr log file generated from these runs are in folder 'logs'.
 
-The first python script below will create folder 'memory_analysis' in the current working directory and place intermediate output 
+The script used below below will create folder 'memory_analysis' in the current working directory and place intermediate output 
 there. This intermediate output is used by the plotting script.
-The second python script below will plot the graphs and place them in 'memory_analysis_graphs' in current working directory.
 ```
 python3 memory_analysis.py /path/to/logs
+```
+The script used below will plot the graphs and place them in 'memory_analysis_graphs' in current working directory.
+```
 python3 plot_memory_analysis.py memory_analysis
 ```
