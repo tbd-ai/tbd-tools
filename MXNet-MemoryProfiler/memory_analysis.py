@@ -1,6 +1,4 @@
 '''
-	@author: atiwari@cs.toronto.edu
-	
 Script to parse the sockeye output with MXNET memory profile annotations. It generates a detailed
 breakdown of what parts of the model consume how much memory.
 '''
@@ -14,6 +12,10 @@ parser = ap.ArgumentParser()
 parser.add_argument('directory', help='path of directory containing the annotated files', type=str)
 args = parser.parse_args()
 files = [args.directory+'/'+file for file in os.listdir(args.directory)]
+
+# READ THESE COMMENTS BEFORE MODIFYING THE SCRIPT:
+# If you add a new regex to 'regex_list', add it to
+# 'regex_to_category_name_encoding' as well.
 
 # TAKE EXTREME CARE TO ENSURE THAT REGEX MATCHES ARE AS 
 # DISJOINT AS POSSIBLE, OTHER WISE ANALYSIS
@@ -162,7 +164,7 @@ for file in files:
 						stats_dict[regex] = [ float(words[2]), [words[6]] ]
 					break
 			if matched == 0:
-				print('UNKNOWN TAG:', words[6], '---did not match any tag. Update regexes list!')
+				print('UNKNOWN TAG:', line, '---did not match any tag. Update regexes list to catch this type of allocation. Read comments in this script to understand how to add regexes.')
 	reader.close()
 	filename = analysis_dir + '/' + file.split('/')[len(file.split('/'))-1] + '_ANALYSIS'
 	# save analysis to file
