@@ -10,24 +10,37 @@ cd MXNet-MemoryProfiler
 ```
 
 2. Build MXNet from source by following the documentation here:
+
 [MXNet Installation instructions.](https://mxnet.incubator.apache.org/install/index.html)
 
 Replicated from above link:
+
 The following installation instructions have been tested on Ubuntu 14.04 and 16.04.
+
 Prerequisites
+
 Install the following NVIDIA libraries to setup MXNet with GPU support:
-⋅⋅1.Install CUDA 9.0 following the NVIDIA’s [installation guide.](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)
-⋅⋅2.Install cuDNN 7 for CUDA 9.0 following the NVIDIA’s [installation guide.](https://developer.nvidia.com/cudnn) You may need to register with NVIDIA for downloading the cuDNN library.
+
+1.Install CUDA 9.0 following the NVIDIA’s [installation guide.](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)
+
+2.Install cuDNN 7 for CUDA 9.0 following the NVIDIA’s [installation guide.](https://developer.nvidia.com/cudnn) You may need to 
+register with NVIDIA for downloading the cuDNN library.
+
 Note: Make sure to add CUDA install path to LD_LIBRARY_PATH.
+
 Example - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
 
 Building MXNet from source is a 2 step process.
-⋅⋅1.Build the MXNet core shared library, libmxnet.so, from the C++ sources.
-⋅⋅2.Build the language specific bindings. Example - Python bindings, Scala bindings.
+
+1.Build the MXNet core shared library, libmxnet.so, from the C++ sources.
+
+2.Build the language specific bindings. Example - Python bindings, Scala bindings.
 
 Minimum Requirements
-⋅⋅1.GCC 4.8 or later to compile C++ 11.
-⋅⋅2.GNU Make
+
+1.GCC 4.8 or later to compile C++ 11.
+
+2.GNU Make
 
 Build the MXNet core shared library
 
@@ -38,6 +51,7 @@ $ sudo apt-get install -y build-essential git
 ```
 
 Step 2 Install OpenBLAS.
+
 MXNet uses BLAS and LAPACK libraries for accelerated numerical computations on CPU machine. There are several flavors of BLAS/LAPACK libraries - OpenBLAS, ATLAS and MKL. In this step we install OpenBLAS. You can choose to install ATLAS or MKL.
 ```
 $ sudo apt-get install -y libopenblas-dev liblapack-dev
