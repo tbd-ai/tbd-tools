@@ -9,18 +9,72 @@ cd MXNet-MemoryProfiler
 ./patch_profiler.sh
 ```
 
-2. Now edit 'mxnet/setup-utils/install-mxnet-ubuntu-python.sh'. At the start, change the line:
+2. Build MXNet from source by following the documentation here:
+[MXNet Installation instructions.](https://mxnet.incubator.apache.org/install/index.html)
+
+Replicated from above link:
+The following installation instructions have been tested on Ubuntu 14.04 and 16.04.
+Prerequisites
+Install the following NVIDIA libraries to setup MXNet with GPU support:
+⋅⋅1.Install CUDA 9.0 following the NVIDIA’s [installation guide.](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)
+⋅⋅2.Install cuDNN 7 for CUDA 9.0 following the NVIDIA’s [installation guide.](https://developer.nvidia.com/cudnn) You may need to register with NVIDIA for downloading the cuDNN library.
+Note: Make sure to add CUDA install path to LD_LIBRARY_PATH.
+Example - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+
+Building MXNet from source is a 2 step process.
+⋅⋅1.Build the MXNet core shared library, libmxnet.so, from the C++ sources.
+⋅⋅2.Build the language specific bindings. Example - Python bindings, Scala bindings.
+
+Minimum Requirements
+⋅⋅1.GCC 4.8 or later to compile C++ 11.
+⋅⋅2.GNU Make
+
+Build the MXNet core shared library
+
+Step 1 Install build tools and git.
 ```
-MXNET_HOME="$HOME/mxnet_old/"
-```
-to the path of mxnet we just cloned:
-```
-MXNET_HOME="/path/to/MXNet-MemoryProfiler/mxnet"
+$ sudo apt-get update
+$ sudo apt-get install -y build-essential git
 ```
 
-3. Run the following to install the updated mxnet:
+Step 2 Install OpenBLAS.
+MXNet uses BLAS and LAPACK libraries for accelerated numerical computations on CPU machine. There are several flavors of BLAS/LAPACK libraries - OpenBLAS, ATLAS and MKL. In this step we install OpenBLAS. You can choose to install ATLAS or MKL.
 ```
-bash setup-utils/install-mxnet-ubuntu-python.sh
+$ sudo apt-get install -y libopenblas-dev liblapack-dev
+```
+
+Step 3 Install OpenCV.
+MXNet uses OpenCV for efficient image loading and augmentation operations.
+```
+$ sudo apt-get install -y libopencv-dev
+```
+
+Step 4 Build MXNet core shared library.
+```
+$ make -j $(nproc) USE_OPENCV=1 USE_BLAS=openblas USE_CUDA=1 USE_CUDA_PATH=/usr/local/cuda USE_CUDNN=1
+```
+
+Note - USE_OPENCV, USE_BLAS, USE_CUDA, USE_CUDA_PATH AND USE_CUDNN are make file flags to set compilation options to use OpenCV, OpenBLAS, CUDA and cuDNN libraries. You can explore and use more compilation options in make/config.mk. Make sure to set USE_CUDA_PATH to right CUDA installation path. In most cases it is - /usr/local/cuda.
+
+Install the MXNet Python binding
+
+Step 1 Install prerequisites - python, setup-tools, python-pip and libfortran (required for Numpy)..
+```
+$ sudo apt-get install -y python-dev python-setuptools python-pip libgfortran3
+```
+
+Step 2 Install the MXNet Python binding.
+```
+$ cd python
+$ pip install --upgrade pip
+$ pip install -e .
+```
+Note that the -e flag is optional. It is equivalent to --editable and means that if you edit the source files, these changes will be reflected in the package installed.
+
+Step 3 Install Graphviz. (Optional, needed for graph visualization using mxnet.viz package).
+```
+sudo apt-get install graphviz
+pip install graphviz
 ```
 
 4. Run whatever sockeye/mxnet model you want to profile and place the stderr output file in a folder. Let us call this folder 'logs'.
@@ -64,23 +118,8 @@ Use scripts to clone mxnet and patch memory profiler:
 cd MXNet-MemoryProfiler
 ./patch_profiler.sh
 ```
-Change directory to mxnet/setup utils and set MXNET_HOME correctly
-```
-cd mxnet/setup-utils
-vim setup-utils/install-mxnet-ubuntu-python.sh
-```
-change :
-```
-MXNET_HOME="$HOME/mxnet_old/"
-```
-to:
-```
-MXNET_HOME="/path/to/MXNet-MemoryProfiler/mxnet"
-```
-Install mxnet:
-```
-bash install-mxnet-ubuntu-python.sh
-```
+Build MXNet **from source** by following the instructions here:
+[MXNet Installation instructions.](https://mxnet.incubator.apache.org/install/index.html)
 Now, run sockeye / mxnet models and lets say the stderr log file generated from these runs are in folder 'logs'. Generate memory profile graphs:
 ```
 python3 memory_analysis.py /path/to/logs
