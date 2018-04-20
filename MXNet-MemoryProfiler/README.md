@@ -112,6 +112,12 @@ array([[ 3.,  3.,  3.],
 
 1. Run whatever sockeye/mxnet model you want to profile and place the stderr output file in a folder. Let us call this folder 'logs'.
 For example, save a sockeye models output to file in the following manner:
+
+Note the following
+
+1. Refer [here](https://github.com/awslabs/sockeye) to understand how to install and use Sockeye.
+2. Refer [here](https://github.com/apache/incubator-mxnet/tree/master/example) to see MXNet usage examples.
+3. **The memory profiler provided here works with MXNET Version v0.12.0 hence it can only be used with Sockeye versions that work with MXNet v0.12.0. Keep this in mind while looking at examples in above links.**
 ```
 python3 -m sockeye.train \
 -s /home/ab/clone/data/wmt17/corpus.tc.BPE.de \
