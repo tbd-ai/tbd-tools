@@ -2,7 +2,7 @@
 
 This folder contains the git patch file which will modify MXNet source to generate annotations which can be used to create a memory profile of the mxnet/sockeye models. Further, the folder has scripts to analysis the mxnet/sockeye log file and plot the memory profile on a graph.
 
-## USAGE
+## INSTALLING MXNET WITH MEMORY PROFILER
 1. The script 'patch_profiler.sh' downloads mxnet, switches to v0.12 and applies the profiler git .patch file 'memprofilerv12.patch'. To use it, change directory to folder containing 'patch_profiler.sh' and 'memprofilerv12.patch' and run 'patch_profiler.sh'.
 ```
 cd MXNet-MemoryProfiler
@@ -13,11 +13,11 @@ cd MXNet-MemoryProfiler
 
 [MXNet Installation instructions.](https://mxnet.incubator.apache.org/install/index.html)
 
-Replicated from above link:
+**Replicated from above link for ease:**
 
 The following installation instructions have been tested on Ubuntu 14.04 and 16.04.
 
-Prerequisites
+**Prerequisites**
 
 Install the following NVIDIA libraries to setup MXNet with GPU support:
 
@@ -36,48 +36,49 @@ Building MXNet from source is a 2 step process.
 
 2.Build the language specific bindings. Example - Python bindings, Scala bindings.
 
-Minimum Requirements
+**Minimum Requirements**
 
 1.GCC 4.8 or later to compile C++ 11.
 
 2.GNU Make
 
-Build the MXNet core shared library
+**Build the MXNet core shared library**
 
-Step 1 Install build tools and git.
+**Step 1 Install build tools and git.**
 ```
 $ sudo apt-get update
 $ sudo apt-get install -y build-essential git
 ```
 
-Step 2 Install OpenBLAS.
+**Step 2 Install OpenBLAS.**
 
 MXNet uses BLAS and LAPACK libraries for accelerated numerical computations on CPU machine. There are several flavors of BLAS/LAPACK libraries - OpenBLAS, ATLAS and MKL. In this step we install OpenBLAS. You can choose to install ATLAS or MKL.
 ```
 $ sudo apt-get install -y libopenblas-dev liblapack-dev
 ```
 
-Step 3 Install OpenCV.
+**Step 3 Install OpenCV.**
+
 MXNet uses OpenCV for efficient image loading and augmentation operations.
 ```
 $ sudo apt-get install -y libopencv-dev
 ```
 
-Step 4 Build MXNet core shared library.
+**Step 4 Build MXNet core shared library.**
 ```
 $ make -j $(nproc) USE_OPENCV=1 USE_BLAS=openblas USE_CUDA=1 USE_CUDA_PATH=/usr/local/cuda USE_CUDNN=1
 ```
 
 Note - USE_OPENCV, USE_BLAS, USE_CUDA, USE_CUDA_PATH AND USE_CUDNN are make file flags to set compilation options to use OpenCV, OpenBLAS, CUDA and cuDNN libraries. You can explore and use more compilation options in make/config.mk. Make sure to set USE_CUDA_PATH to right CUDA installation path. In most cases it is - /usr/local/cuda.
 
-Install the MXNet Python binding
+**Install the MXNet Python binding**
 
-Step 1 Install prerequisites - python, setup-tools, python-pip and libfortran (required for Numpy)..
+**Step 1 Install prerequisites - python, setup-tools, python-pip and libfortran (required for Numpy)..**
 ```
 $ sudo apt-get install -y python-dev python-setuptools python-pip libgfortran3
 ```
 
-Step 2 Install the MXNet Python binding.
+**Step 2 Install the MXNet Python binding.**
 ```
 $ cd python
 $ pip install --upgrade pip
@@ -85,13 +86,31 @@ $ pip install -e .
 ```
 Note that the -e flag is optional. It is equivalent to --editable and means that if you edit the source files, these changes will be reflected in the package installed.
 
-Step 3 Install Graphviz. (Optional, needed for graph visualization using mxnet.viz package).
+**Step 3 Install Graphviz. (Optional, needed for graph visualization using mxnet.viz package).**
 ```
 sudo apt-get install graphviz
 pip install graphviz
 ```
+**Validate MXNet Installation**
 
-4. Run whatever sockeye/mxnet model you want to profile and place the stderr output file in a folder. Let us call this folder 'logs'.
+Start the python terminal.
+```
+$ python
+```
+Run a short MXNet python program to create a 2X3 matrix of ones a on a GPU, multiply each element in the matrix by 2 followed by adding 1. We expect the output to be a 2X3 matrix with all elements being 3. We use mx.gpu(), to set MXNet context to be GPUs.
+```
+>>> import mxnet as mx
+>>> a = mx.nd.ones((2, 3), mx.gpu())
+>>> b = a * 2 + 1
+>>> b.asnumpy()
+array([[ 3.,  3.,  3.],
+       [ 3.,  3.,  3.]], dtype=float32)
+```
+**We have successfully installed the modified MXNet now we describe how to use it to generate memory profile graphs**
+
+## USAGE
+
+1. Run whatever sockeye/mxnet model you want to profile and place the stderr output file in a folder. Let us call this folder 'logs'.
 For example, save a sockeye models output to file in the following manner:
 ```
 python3 -m sockeye.train \
@@ -116,24 +135,26 @@ python3 -m sockeye.train \
 Note how we redirect stderr and stdout output to 'log_file' above, the stderr output contains annotations from the memory profiler 
 that we will use to generate the memory profile graph.
 
-5. Use 'memory_analysis.py' script. Pass, as command line argument, the path of the directory containing the stderr log file of sockeye/mxnet (in our example: 'logs' folder from above step). The script will generate an analysis file (ending with 'ANALYSIS') for each log file in the folder that was supplied to the script. These 'ANALYSIS' files contain a json dump of information of all types of allocations found by the memory profiler. The generated analysis files will be placed in a folder called 'memory_analysis', in the current working directory.
+2. Use 'memory_analysis.py' script. Pass, as command line argument, the path of the directory containing the stderr log file of sockeye/mxnet (in our example: 'logs' folder from above step). The script will generate an analysis file (ending with 'ANALYSIS') for each log file in the folder that was supplied to the script. These 'ANALYSIS' files contain a json dump of information of all types of allocations found by the memory profiler. The generated analysis files will be placed in a folder called 'memory_analysis', in the current working directory.
 ```
 python3 memory_analysis.py /path/to/logs
 ```
 
-6. Next, to plot the corresponding graphs: use script 'plot_memory_analysis.py' and pass the path to 'memory_analysis' folder (generated in previous step) to this script. It will plot one graph for each 'ANALYSIS' file in 'memory_analysis' folder. It will place the graphs in 'memory_analysis_graphs' in current working directory. The script has other options such as to plot all files on same graph (used for comparison studies), explore the other options by running 'python3 plot_memory_analysis.py -h'.
+3. Next, to plot the corresponding graphs: use script 'plot_memory_analysis.py' and pass the path to 'memory_analysis' folder (generated in previous step) to this script. It will plot one graph for each 'ANALYSIS' file in 'memory_analysis' folder. It will place the graphs in 'memory_analysis_graphs' in current working directory. The script has other options such as to plot all files on same graph (used for comparison studies), explore the other options by running 'python3 plot_memory_analysis.py -h'.
 ```
 python3 plot_memory_analysis.py memory_analysis
 ```
 
-## QUICK USAGE SUMMARY
+## QUICK SUMMARY
 Use scripts to clone mxnet and patch memory profiler:
 ```
 cd MXNet-MemoryProfiler
 ./patch_profiler.sh
 ```
 Build MXNet **from source** by following the instructions here:
+
 [MXNet Installation instructions.](https://mxnet.incubator.apache.org/install/index.html)
+
 Now, run sockeye / mxnet models and lets say the stderr log file generated from these runs are in folder 'logs'. Generate memory profile graphs:
 ```
 python3 memory_analysis.py /path/to/logs
