@@ -108,16 +108,18 @@ array([[ 3.,  3.,  3.],
 ```
 **We have successfully installed the modified MXNet now we describe how to use it to generate memory profile graphs**
 
+Note the following:
+1. Refer [here](https://github.com/awslabs/sockeye) to understand how to install and use Sockeye.
+2. Refer [here](https://github.com/apache/incubator-mxnet/tree/master/example) to see MXNet usage examples.
+3. **The memory profiler provided here works with MXNET Version v0.12.0 hence it can be used with Sockeye versions that support MXNET v0.12.0.** This memory profiler has been tested with Sockeye version 1.12.3 of the branch 'origin/arxiv_1217'. When installing sockeye, You can checkout the archive branch by:
+```
+git checkout origin/arxiv_1217
+```
+
 ## USAGE
 
 1. Run whatever sockeye/mxnet model you want to profile and place the stderr output file in a folder. Let us call this folder 'logs'.
 For example, save a sockeye models output to file in the following manner:
-
-Note the following
-
-1. Refer [here](https://github.com/awslabs/sockeye) to understand how to install and use Sockeye.
-2. Refer [here](https://github.com/apache/incubator-mxnet/tree/master/example) to see MXNet usage examples.
-3. **The memory profiler provided here works with MXNET Version v0.12.0 hence it can only be used with Sockeye versions that work with MXNet v0.12.0. Keep this in mind while looking at examples in above links.**
 ```
 python3 -m sockeye.train \
 -s /home/ab/clone/data/wmt17/corpus.tc.BPE.de \
