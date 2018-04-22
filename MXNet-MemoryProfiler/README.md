@@ -11,7 +11,7 @@ cd MXNet-MemoryProfiler
 ./patch_profiler.sh
 ```
 
-**Prerequisites**
+### Prerequisites
 
 Our memory profiler is based on MXNet with GPU support. Please install CUDA 9.0 and cuDNN 7.0 according to the following instructions:
 
@@ -42,7 +42,7 @@ cd mxnet
 bash setup-utils/install-mxnet-ubuntu-python.sh
 ```
 
-**Validate MXNet Installation**
+### Validate MXNet Installation
 
 Start the python terminal.
 ```
