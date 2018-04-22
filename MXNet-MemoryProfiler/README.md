@@ -19,7 +19,7 @@ Our memory profiler is based on MXNet with GPU support. Please install CUDA 9.0 
 
 - __Step 3__ Install cuDNN 7 for CUDA 9.0 following the NVIDIA’s [installation guide.](https://developer.nvidia.com/cudnn) You may need to register with NVIDIA for downloading the cuDNN library.
 
-Note: Make sure that the CUDA install path is added to LD_LIBRARY_PATH:
+Note: Make sure that the CUDA install path is added to LD_LIBRARY_PATH: \
 `export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH`
 
 Make sure that GCC version is 4.8 or later to compile C++ 11.
