@@ -103,19 +103,3 @@ python3 memory_analysis.py /path/to/logs
 ```
 python3 plot_memory_analysis.py memory_analysis
 ```
-
-## QUICK SUMMARY
-Use scripts to clone mxnet and patch memory profiler:
-```
-cd MXNet-MemoryProfiler
-./patch_profiler.sh
-```
-Build MXNet **from source** by following the instructions here:
-
-[MXNet Installation instructions.](https://mxnet.incubator.apache.org/install/index.html)
-
-Now, run sockeye / mxnet models and lets say the stderr log file generated from these runs are in folder 'logs'. Generate memory profile graphs:
-```
-python3 memory_analysis.py /path/to/logs
-python3 plot_memory_analysis.py memory_analysis
-```
