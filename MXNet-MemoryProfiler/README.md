@@ -1,48 +1,31 @@
-# MXNET MEMORY PROFILER
+# MXNet GPU Memory Profiler
 
 This folder contains the git patch file which will modify MXNet source to generate annotations which can be used to create a memory profile of the mxnet/sockeye models. Further, the folder has scripts to analysis the mxnet/sockeye log file and plot the memory profile on a graph.
 
-## INSTALLING MXNET WITH MEMORY PROFILER
-1. The script 'patch_profiler.sh' downloads mxnet, switches to v0.12 and applies the profiler git .patch file 'memprofilerv12.patch'. To use it, change directory to folder containing 'patch_profiler.sh' and 'memprofilerv12.patch' and run 'patch_profiler.sh'.
+The profiler is based on a modified version of MXNet. Therefore installing the memory profiler will essentially require a reinstallation of MXNet. We provide two ways to install our profiler: install from scratch, and install with vertualenv. Our current profiler is based on the code base of MXNet version 0.12.0.
+
+## Install MXNet With Memory Profiler From Scratch
+- __Step 1__ The script 'patch_profiler.sh' downloads mxnet, switches to v0.12 and applies the profiler git .patch file 'memprofilerv12.patch'. To use it, change directory to folder containing 'patch_profiler.sh' and 'memprofilerv12.patch' and run 'patch_profiler.sh'.
 ```
 cd MXNet-MemoryProfiler
 ./patch_profiler.sh
 ```
 
-2. Build MXNet from source by following the documentation here:
-
-[MXNet Installation instructions.](https://mxnet.incubator.apache.org/install/index.html)
-
-**Replicated from above link for ease:**
-
-The following installation instructions have been tested on Ubuntu 14.04 and 16.04.
-
 **Prerequisites**
 
-Install the following NVIDIA libraries to setup MXNet with GPU support:
+Our memory profiler is based on MXNet with GPU support. Please install CUDA 9.0 and cuDNN 7.0 according to the following instructions:
 
 1.Install CUDA 9.0 following the NVIDIA’s [installation guide.](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)
 
 2.Install cuDNN 7 for CUDA 9.0 following the NVIDIA’s [installation guide.](https://developer.nvidia.com/cudnn) You may need to 
 register with NVIDIA for downloading the cuDNN library.
 
-Note: Make sure to add CUDA install path to LD_LIBRARY_PATH.
+Note: Make sure that the CUDA install path is added to LD_LIBRARY_PATH:
+`export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH`
 
-Example - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+Make sure that GCC version is 4.8 or later to compile C++ 11.
 
-Building MXNet from source is a 2 step process.
-
-1.Build the MXNet core shared library, libmxnet.so, from the C++ sources.
-
-2.Build the language specific bindings. Example - Python bindings, Scala bindings.
-
-**Minimum Requirements**
-
-1.GCC 4.8 or later to compile C++ 11.
-
-2.GNU Make
-
-**Build the MXNet core shared library**
+**Build the MXNet core shared library and python bindings**
 
 **Step 1 Install build tools and git.**
 ```
