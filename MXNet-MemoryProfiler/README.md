@@ -57,19 +57,19 @@ Run a short MXNet python program to create a 2X3 matrix of ones a on a GPU, mult
 array([[ 3.,  3.,  3.],
        [ 3.,  3.,  3.]], dtype=float32)
 ```
-**We have successfully installed the modified MXNet now we describe how to use it to generate memory profile graphs**
 
-Note the following:
-1. Refer [here](https://github.com/awslabs/sockeye) to understand how to install and use Sockeye.
-2. Refer [here](https://github.com/apache/incubator-mxnet/tree/master/example) to see MXNet usage examples.
-3. **The memory profiler provided here works with MXNET Version v0.12.0 hence it can be used with Sockeye versions that support MXNET v0.12.0.** This memory profiler has been tested with Sockeye version 1.12.3 of the branch 'origin/arxiv_1217'. When installing sockeye, You can checkout the archive branch by:
+## Install MXNet With Memory Profiler using virtualenv
+
+## Example Usage: Sockeye
+
+- __Step 1__ Refer [here](https://github.com/awslabs/sockeye) to understand how to install and use Sockeye.
+- __Step 2__ Refer [here](https://github.com/apache/incubator-mxnet/tree/master/example) to see MXNet usage examples.
+- __Step 3__ **The memory profiler provided here works with MXNET Version v0.12.0 hence it can be used with Sockeye versions that support MXNET v0.12.0.** This memory profiler has been tested with Sockeye version 1.12.3 of the branch 'origin/arxiv_1217'. When installing sockeye, You can checkout the archive branch by:
 ```
 git checkout origin/arxiv_1217
 ```
 
-## USAGE
-
-1. Run whatever sockeye/mxnet model you want to profile and place the stderr output file in a folder. Let us call this folder 'logs'.
+- __Step 4__ Run whatever sockeye/mxnet model you want to profile and place the stderr output file in a folder. Let us call this folder 'logs'.
 For example, save a sockeye models output to file in the following manner:
 ```
 python3 -m sockeye.train \
@@ -94,12 +94,12 @@ python3 -m sockeye.train \
 Note how we redirect stderr and stdout output to 'log_file' above, the stderr output contains annotations from the memory profiler 
 that we will use to generate the memory profile graph.
 
-2. Use 'memory_analysis.py' script. Pass, as command line argument, the path of the directory containing the stderr log file of sockeye/mxnet (in our example: 'logs' folder from above step). The script will generate an analysis file (ending with 'ANALYSIS') for each log file in the folder that was supplied to the script. These 'ANALYSIS' files contain a json dump of information of all types of allocations found by the memory profiler. The generated analysis files will be placed in a folder called 'memory_analysis', in the current working directory.
+- __Step 5__ Use 'memory_analysis.py' script. Pass, as command line argument, the path of the directory containing the stderr log file of sockeye/mxnet (in our example: 'logs' folder from above step). The script will generate an analysis file (ending with 'ANALYSIS') for each log file in the folder that was supplied to the script. These 'ANALYSIS' files contain a json dump of information of all types of allocations found by the memory profiler. The generated analysis files will be placed in a folder called 'memory_analysis', in the current working directory.
 ```
 python3 memory_analysis.py /path/to/logs
 ```
 
-3. Next, to plot the corresponding graphs: use script 'plot_memory_analysis.py' and pass the path to 'memory_analysis' folder (generated in previous step) to this script. It will plot one graph for each 'ANALYSIS' file in 'memory_analysis' folder. It will place the graphs in 'memory_analysis_graphs' in current working directory. The script has other options such as to plot all files on same graph (used for comparison studies), explore the other options by running 'python3 plot_memory_analysis.py -h'.
+- __Step 6__ (optional) if you want to plot the corresponding graphs: use script 'plot_memory_analysis.py' and pass the path to 'memory_analysis' folder (generated in previous step) to this script. It will plot one graph for each 'ANALYSIS' file in 'memory_analysis' folder. It will place the graphs in 'memory_analysis_graphs' in current working directory. The script has other options such as to plot all files on same graph (used for comparison studies), explore the other options by running 'python3 plot_memory_analysis.py -h'.
 ```
 python3 plot_memory_analysis.py memory_analysis
 ```
