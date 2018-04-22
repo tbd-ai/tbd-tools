@@ -24,7 +24,7 @@ __Note:__ Make sure that the CUDA install path is added to LD_LIBRARY_PATH: \
 
 __Note:__ Make sure that GCC version is 4.8 or later to compile C++ 11.
 
-**Build the MXNet core shared library and python bindings**
+### Build the MXNet core shared library and python bindings
 
 - __Step 4__ Change the `MXNET_HOME` variable in `mxnet/setup-utils/install-mxnet-ubuntu-python.sh` to the current directory of mxnet.
 
