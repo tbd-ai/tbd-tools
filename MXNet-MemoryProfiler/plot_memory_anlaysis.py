@@ -8,6 +8,7 @@ import numpy as np
 import sys
 import argparse as ap
 import os
+# from memory_analysis import regex_to_category_name_encoding
 
 parser = ap.ArgumentParser()
 parser.add_argument('directory', help='path of directory containing the output of memory analysis script. These output files names must end with _ANALYSIS' , type=str)
@@ -73,8 +74,17 @@ regex_to_category_name_encoding = {
 	'(target)' : 'Target',
 	'(target_label)': 'Target Label',
 	'workspace' : 'Workspace',
-	'untagged' : 'Unknown',
-	'warning!,ctx_source_unclear' : 'Unknown'
+	'untagged' : 'Unknown (From Python Side)',
+	'warning!,ctx_source_unclear' : 'Unknown (From C++ side)',
+	'(data)' : 'Data',
+	'aux_state' : 'Auxiliary State',
+	'relu' : 'Relu',
+	'conv' : 'Convolutional Unit',
+	'pool' : 'Pooling',
+	'bn' : 'Batch Norm',
+	':id' : 'Id',
+	':fc' : 'Fully Connected',
+	'_sc' : 'SC unit'
 }
 
 def get_model_name(file):

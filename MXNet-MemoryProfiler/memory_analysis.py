@@ -1,6 +1,8 @@
 '''
 Script to parse the sockeye output with MXNET memory profile annotations. It generates a detailed
 breakdown of what parts of the model consume how much memory.
+
+	@author: atiwari@cs.toronto.edu
 '''
 import argparse as ap
 import numpy as np
@@ -32,6 +34,12 @@ files = [args.directory+'/'+file for file in os.listdir(args.directory)]
 regex_list = [
 # weights and gradients; The following tags must be placed before 'embed'
 'in_arg', 'arg_grad', 
+# Auxiliary State: pecial states of symbols that do not correspond to an
+# argument, and are not updated by gradient descent. Common examples of
+# auxiliary states include the moving_mean and moving_variance in
+# BatchNorm. Most operators do not have auxiliary states.
+# NOTE: aux_state must be placed before 'bn' in this list
+'aux_state',
 # optimizer state, allocated by python bindings for weight update; must be placed before embed
 'optimizer',
 # must be placed before dot
@@ -42,11 +50,15 @@ regex_list = [
 'dot', ':broadcast', 'zeros',
 # conv
 'sum', 'transpose', ':dropout', 'slice', 'cnn', 'arange', 'dot',
-'fullyconnected', 'sequencemask',
+'fullyconnected', 'sequencemask', 'conv',
 # transf
 'activation', 'reshape', 'transformer',
+# ResNet
+'relu', 'pool', 'bn', ':id', ':fc', '_sc',
+# ':id\|:fc\|_sc'
 # misc
-'_equal_scalar', '(source)', '(target)', '(target_label)',
+'_equal_scalar', '(source)', '(target)', '(target_label)', '(data)',
+'dropout',
 'untagged', 'warning!,ctx_source_unclear'
 ]
 
@@ -89,11 +101,25 @@ regex_to_category_name_encoding = {
 	'(target)' : 'Target',
 	'(target_label)': 'Target Label',
 	'workspace' : 'Workspace',
-	'untagged' : 'Unknown',
-	'warning!,ctx_source_unclear' : 'Unknown'
+	'untagged' : 'Unknown (From Python Side)',
+	'warning!,ctx_source_unclear' : 'Unknown (From C++ side)',
+	'(data)' : 'Data',
+	'aux_state' : 'Auxiliary State',
+	'relu' : 'Relu',
+	'conv' : 'Convolutional Unit',
+	'pool' : 'Pooling',
+	'bn' : 'Batch Norm',
+	':id' : 'Id',
+	':fc' : 'Fully Connected',
+	'_sc' : 'SC unit'
 }
 
 MB = 1024*1024
+
+def print_guide():
+	print('###############################################################################')
+	print("The script discovered memory allocations of type that haven't been seen before. They were printed as 'UNKNOWN TAG' above. To include them in the analysis, do the following:\nLet us take an example, lets say the UNKNOWN TAGS are:\n(data)\n(aux_state:bn_data_moving_mean)\n(aux_state:bn0_moving_var)\n(forward_features:bn1)\n(forward_features:fc1)\nThen it is clear that we have new categories for which we can construct regexes as follows:\n'aux_state', 'data', ':bn', ':fc'.\nAdd them to the script as follows:\n1. Add the regex strings to 'regex_list' and 'regex_to_category_name_encoding' in memory_analysis.py\n2. Paste this updated 'regex_to_category_name_encoding' dict in 'plot_memory_analysis.py'.\n3. Run the scripts again for updated analysis and graphs.\nIf the above process doesn't work or it is too complicated for you please open an issue on out GitHub repo and we will sort it for you.")
+	print('###############################################################################')
 
 def print_summary(stats_dict):
 	# sort in descending order of allocation size of each category
@@ -140,6 +166,7 @@ analysis_dir='./memory_analysis'
 if not os.path.exists(analysis_dir):
 	os.makedirs(analysis_dir)
 
+print_help_str = False
 for file in files:
 	# This dict has form dict = { 'tag' : [float: total size of allocations for this tag,
 	# list of all annotations with this tag]}
@@ -164,7 +191,8 @@ for file in files:
 						stats_dict[regex] = [ float(words[2]), [words[6]] ]
 					break
 			if matched == 0:
-				print('UNKNOWN TAG:', line, '---did not match any tag. Update regexes list to catch this type of allocation. Read comments in this script to understand how to add regexes.')
+				print_help_str = True
+				print('UNKNOWN TAG:', words[6])
 	reader.close()
 	filename = analysis_dir + '/' + file.split('/')[len(file.split('/'))-1] + '_ANALYSIS'
 	# save analysis to file
@@ -173,3 +201,5 @@ for file in files:
 	# print summary
 	print_summary(stats_dict)
 	print (file, 'done')
+	if print_help_str:
+		print_guide()
