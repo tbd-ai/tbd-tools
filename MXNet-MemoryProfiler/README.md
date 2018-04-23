@@ -4,7 +4,7 @@ This folder contains the git patch file which will modify MXNet source to genera
 
 The profiler is based on a modified version of MXNet. Therefore installing the memory profiler will essentially require a reinstallation of MXNet. <!--We provide two ways to install our profiler: install from scratch, and install with vertualenv. -->Our current profiler is based on the code base of MXNet version 0.12.0.
 
-## <!--(Option 1) -->Install MXNet With Memory Profiler From Scratch
+## <!--(Option 1) -->Install MXNet With Memory Profiler<!-- From Scratch-->
 - __Step 1__ The script 'patch_profiler.sh' downloads mxnet, switches to v0.12 and applies the profiler git .patch file 'memprofilerv12.patch'. To use it, change directory to folder containing 'patch_profiler.sh' and 'memprofilerv12.patch' and run 'patch_profiler.sh'.
 ```
 cd MXNet-MemoryProfiler
