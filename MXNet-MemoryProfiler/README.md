@@ -2,7 +2,7 @@
 
 This folder contains the git patch file which will modify MXNet source to generate annotations which can be used to create a memory profile of the mxnet/sockeye models. Further, the folder has scripts to analysis the mxnet/sockeye log file and plot the memory profile on a graph.
 
-The profiler is based on a modified version of MXNet. Therefore installing the memory profiler will essentially require a reinstallation of MXNet. We provide two ways to install our profiler: install from scratch, and install with vertualenv. Our current profiler is based on the code base of MXNet version 0.12.0.
+The profiler is based on a modified version of MXNet. Therefore installing the memory profiler will essentially require a reinstallation of MXNet. <!--We provide two ways to install our profiler: install from scratch, and install with vertualenv. -->Our current profiler is based on the code base of MXNet version 0.12.0.
 
 ## (Option 1) Install MXNet With Memory Profiler From Scratch
 - __Step 1__ The script 'patch_profiler.sh' downloads mxnet, switches to v0.12 and applies the profiler git .patch file 'memprofilerv12.patch'. To use it, change directory to folder containing 'patch_profiler.sh' and 'memprofilerv12.patch' and run 'patch_profiler.sh'.
@@ -57,8 +57,31 @@ Run a short MXNet python program to create a 2X3 matrix of ones a on a GPU, mult
 array([[ 3.,  3.,  3.],
        [ 3.,  3.,  3.]], dtype=float32)
 ```
-
+<!--
 ## (Option 2) Install MXNet With Memory Profiler Using Virtualenv
+
+If you already have a regular MXNet installed and you don't want your profiler affects your regular MXNet, you can install the profiler under virtualenv. To do so, repeat the step 1 to 3 above, then continue with the following steps:
+
+### Setup Virtualenv
+
+- __Step 4__ install the virtualenv using
+```
+sudo apt-get update
+sudo apt-get install -y python-dev python-virtualenv
+```
+
+- __Step 5__ Create and activate virtualenv environment for MXNet.
+```
+virtualenv --system-site-packages path/to/tbd-tools/MXNet-MemoryProfiler/mxnet
+source path/to/tbd-tools/MXNet-MemoryProfiler/mxnet/bin/activate
+```
+After activating the environment, you should see the prompt as below.
+```
+(mxnet)$
+```
+
+- __Step 6__ install your MXNet 
+-->
 
 ## Example Usage: Sockeye
 
