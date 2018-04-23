@@ -4,7 +4,7 @@ This folder contains the git patch file which will modify MXNet source to genera
 
 The profiler is based on a modified version of MXNet. Therefore installing the memory profiler will essentially require a reinstallation of MXNet. <!--We provide two ways to install our profiler: install from scratch, and install with vertualenv. -->Our current profiler is based on the code base of MXNet version 0.12.0.
 
-## (Option 1) Install MXNet With Memory Profiler From Scratch
+## <!--(Option 1) -->Install MXNet With Memory Profiler From Scratch
 - __Step 1__ The script 'patch_profiler.sh' downloads mxnet, switches to v0.12 and applies the profiler git .patch file 'memprofilerv12.patch'. To use it, change directory to folder containing 'patch_profiler.sh' and 'memprofilerv12.patch' and run 'patch_profiler.sh'.
 ```
 cd MXNet-MemoryProfiler
@@ -114,8 +114,9 @@ python3 -m sockeye.train \
 --optimized-metric bleu \
 --max-updates 1 > log_file 2>&1
 ```
-Note how we redirect stderr and stdout output to 'log_file' above, the stderr output contains annotations from the memory profiler 
-that we will use to generate the memory profile graph.
+Note how we redirect stderr and stdout output to 'log_file' above, the stderr output contains annotations from the memory profiler that we will use to generate the memory profile graph.
+
+**Important** In the Sockeye example, we use the `--max-updates` option to limit the duration of the training process. In other cases where this option is not available, one can use ctrl+c to early terminate the training process, then use the generated log for next steps. Care should be taken that at **least one training iteration should finish before the training process is terminated**. Generally, longer the training process, more accurate the profiling result. Usually, just a few iterations should be enough for an accurate measurement, because the memory allocation during training is basically a fixed few megabytes, and it doesn't accumulate.
 
 - __Step 5__ Use 'memory_analysis.py' script. Pass, as command line argument, the path of the directory containing the stderr log file of sockeye/mxnet (in our example: 'logs' folder from above step). The script will generate an analysis file (ending with 'ANALYSIS') for each log file in the folder that was supplied to the script. These 'ANALYSIS' files contain a json dump of information of all types of allocations found by the memory profiler. The generated analysis files will be placed in a folder called 'memory_analysis', in the current working directory.
 ```
