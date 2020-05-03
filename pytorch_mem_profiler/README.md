@@ -15,10 +15,11 @@ CUDA (any version, as long as your training code uses it)
 ```
 
 ### Installation
-There is nothing to install to use this memory profiler, but you must ensure that you import it correctly. After cloning this directory, add it to your path in your training code as follows:
+There is nothing to install to use this memory profiler, but you must ensure that you import it correctly. After cloning this directory, add it to your path in your training code as shown below. If the profiler is in your home directory, please use the full path and avoid using the ```~``` alias.
+
 ```Python
 import sys
-sys.path.append('<path to pytorch_mem_profiler/ directory>')
+sys.path.append('<path to pytorch_mem_profiler directory>')
 from pytorch_mem_profiler import *
 ```
 
@@ -108,3 +109,5 @@ Total layer weight gradient usage....127 MB
   final.bias grad......................0 MB
 Intermediate gradients................34 MB
 ```
+## Example Code
+A full example of the modified training code for the Neural Collaborative Filtering model is shown in [ncf_example.py](Examples/ncf_example.py). The original source code can be found on [TBD Suite](https://github.com/tbd-ai/tbd-suite/blob/master/Recommendation-NCF/PyTorch/source/ncf.py). Lines 23-25 import the profiler, lines 212 and 213 create a profiler instance, line 257 records iteration memory usage, and line 259 records epoch memory usage.
